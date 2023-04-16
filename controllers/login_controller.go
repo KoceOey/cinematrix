@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 func UserLogin(w http.ResponseWriter, r *http.Request) {
@@ -36,15 +38,15 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if password != user.Password{
+	if password != user.Password {
 		sendResponse(w, 400, "Wrong Email/Password!!")
 		return
 	}
 
 	generateUserToken(w, user.Id, user.Email, user.UserType)
-	if(user.UserType == "Member"){
-		ShowProfile(w,r)
-	}else{
+	if user.UserType == "Member" {
+		ShowProfile(w, r)
+	} else {
 		// show menu admin
 	}
 }

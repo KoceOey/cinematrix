@@ -15,12 +15,14 @@ func main() {
 
 	router.HandleFunc("/login", controllers.UserLogin).Methods("POST")
 	router.HandleFunc("/logout", controllers.UserLogout).Methods("POST")
+	router.HandleFunc("/register", controllers.Register).Methods("POST")
 
-	router.HandleFunc("/loginProfile", controllers.AuthenticateUser(controllers.ProfileLogin,"Member")).Methods("POST")
-	router.HandleFunc("/logoutProfile", controllers.AuthenticateUser(controllers.ProfileLogout,"Member")).Methods("POST")
+	router.HandleFunc("/loginProfile", controllers.AuthenticateUser(controllers.ProfileLogin, "Member")).Methods("POST")
+	router.HandleFunc("/logoutProfile", controllers.AuthenticateUser(controllers.ProfileLogout, "Member")).Methods("POST")
 
-	router.HandleFunc("/profile", controllers.AuthenticateUser(controllers.ShowProfile,"Member")).Methods("GET")
+	router.HandleFunc("/profile", controllers.AuthenticateUser(controllers.ShowProfile, "Member")).Methods("GET")
 
+	router.HandleFunc("/createProfile", controllers.CreateProfile).Methods("POST")
 	http.Handle("/", router)
 	fmt.Println("Connected to port 8080")
 	log.Println("Connected to port 8080")

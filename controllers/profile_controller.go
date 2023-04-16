@@ -1,10 +1,39 @@
 package controllers
 
 import (
+	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"strconv"
+
+	redis "github.com/redis/go-redis/v9"
 )
+
+var rdb *redis.Client
+var context_redis = context.Background()
+
+func RedisInit() {
+	db := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	rdb = db
+}
+
+func GetRedis() string {
+
+	val, err := rdb.Get(context_redis, "key").Result()
+	if err == redis.Nil {
+		log.Println(http.StatusNotFound, "data tidak ditemukan")
+	} else if err != nil {
+		log.Println(http.StatusBadRequest, "error get redis")
+	}
+
+	return val
+}
 
 func ShowProfile(w http.ResponseWriter, r *http.Request) {
 	db := connect()
@@ -25,7 +54,7 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 	var profile Profile
 	var profiles []Profile
 	for rows.Next() {
-		if err := rows.Scan(&profile.Id, &profile.Nama, &temp.Pin, &temp.Preferences); err != nil {
+		if err := rows.Scan(&profile.Id, &profile.Nama, &temp.Pin, &profile.Preferences); err != nil {
 			log.Println(err)
 			return
 		} else {
@@ -76,6 +105,17 @@ func ProfileLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	generateProfileToken(w, profile.Id, profile.Nama)
+
+	reqRedis := Profile{
+		Preferences: profile.Preferences,
+	}
+	req, _ := json.Marshal(reqRedis)
+	RedisInit()
+	errSet := rdb.Set(context_redis, "key", req, 0).Err()
+
+	if errSet != nil {
+		log.Println("Error Set Redis", errSet)
+	}
 
 	// temp send response
 	sendResponse(w, 200, "Success login profile")

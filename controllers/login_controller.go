@@ -43,7 +43,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 
 	generateUserToken(w, user.Id, user.Email, user.UserType)
 	if(user.UserType == "Member"){
-		// show profile
+		ShowProfile(w,r)
 	}else{
 		// show menu admin
 	}
@@ -51,5 +51,6 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 
 func UserLogout(w http.ResponseWriter, r *http.Request){
 	resetUserToken(w)
+	resetProfileToken(w)
 	sendResponse(w, 200, "Logout Success")
 }

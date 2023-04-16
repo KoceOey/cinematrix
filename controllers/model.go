@@ -1,13 +1,13 @@
 package controllers
 
 type User struct {
-	Id           int    `json:"id_user"`
-	Email        string `json:"email"`
-	Password     string `json:"password"`
-	Created      string `json:"date_created"`
-	Subscription string `json:"subscription_until"`
-	UserType     string `json:"user_type"`
-	NoCard       string `json:"card_number"`
+	Id           int     `json:"id_user"`
+	Email        string  `json:"email"`
+	Password     string  `json:"password"`
+	Created      string  `json:"date_created"`
+	Subscription *string `json:"subscription_until"`
+	UserType     string  `json:"user_type"`
+	NoCard       string  `json:"card_number"`
 }
 
 type Profile struct {

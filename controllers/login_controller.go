@@ -69,7 +69,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	noCard := r.Form.Get("no_card")
 	usertype := "Member"
 
-	_, errQuery := db.Exec("INSERT INTO users(email,password,created,subscription,usertype,no_card)VALUES(?,?,?,?,?,?)", email, password, created, created, usertype, noCard)
+	_, errQuery := db.Exec("INSERT INTO users(email,password,created,usertype,no_card)VALUES(?,?,?,?,?,?)", email, password, created, usertype, noCard)
 
 	if errQuery == nil {
 
@@ -78,6 +78,54 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		fmt.Print(errQuery)
 		sendResponse(w, 400, "Insert Failed")
 	}
+}
+
+func Subscription(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	id, _, _ := getUserTokenData(r)
+
+	currentTime := time.Now()
+	subscriptionDate := currentTime.Format("2006-01-02")
+
+	rows, err := db.Query("SELECT * FROM users WHERE id=?", id)
+	if err != nil {
+		log.Println(err)
+		sendResponse(w, 400, "Something went wrong, please try again.")
+		return
+	}
+
+	var user User
+	for rows.Next() {
+		if err := rows.Scan(&user.Id, &user.Email, &user.Password, &user.Created, &user.Subscription, &user.UserType, &user.NoCard); err != nil {
+			log.Println(err)
+			return
+		} else {
+			break
+		}
+	}
+
+	fmt.Println(user.Subscription)
+
+	if user.Subscription == nil {
+		_, errQuery := db.Exec("UPDATE users SET subscription = ? WHERE id = ?", subscriptionDate, id)
+		if errQuery != nil {
+			sendResponse(w, 200, "Subscribe Success")
+		}
+	} else {
+
+		t, err := time.Parse("2006-01-02", *user.Subscription)
+		if err != nil {
+			fmt.Println(err)
+		}
+		addedDay := t.AddDate(0, 0, 30)
+		_, errQuery := db.Exec("UPDATE users SET subscription = ? WHERE id = ?", addedDay, id)
+		if errQuery != nil {
+			sendResponse(w, 200, "Subscribe Success")
+		}
+	}
+
 }
 
 func UserLogout(w http.ResponseWriter, r *http.Request) {

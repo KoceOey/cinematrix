@@ -5,7 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/cinematrix/controllers"
+	"cinematrix/controllers"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
@@ -21,6 +22,8 @@ func main() {
 	router.HandleFunc("/logoutProfile", controllers.AuthenticateUser(controllers.ProfileLogout, "Member")).Methods("POST")
 
 	router.HandleFunc("/profile", controllers.AuthenticateUser(controllers.ShowProfile, "Member")).Methods("GET")
+
+	router.HandleFunc("/browse", controllers.GetMovies).Methods("GET")
 
 	router.HandleFunc("/createProfile", controllers.CreateProfile).Methods("POST")
 	http.Handle("/", router)

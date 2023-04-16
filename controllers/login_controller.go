@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 func UserLogin(w http.ResponseWriter, r *http.Request) {
@@ -36,20 +38,49 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if password != user.Password{
+	if password != user.Password {
 		sendResponse(w, 400, "Wrong Email/Password!!")
 		return
 	}
 
 	generateUserToken(w, user.Id, user.Email, user.UserType)
-	if(user.UserType == "Member"){
-		ShowProfile(w,r)
-	}else{
+	if user.UserType == "Member" {
+		ShowProfile(w, r)
+	} else {
 		// show menu admin
 	}
 }
 
-func UserLogout(w http.ResponseWriter, r *http.Request){
+func Register(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	currentTime := time.Now()
+	created := currentTime.Format("2006-01-02")
+
+	err := r.ParseForm()
+	if err != nil {
+		sendResponse(w, 400, "Failed")
+	}
+
+	email := r.Form.Get("email")
+	fmt.Print("email : ", email)
+	password := r.Form.Get("password")
+	noCard := r.Form.Get("no_card")
+	usertype := "Member"
+
+	_, errQuery := db.Exec("INSERT INTO users(email,password,created,subscription,usertype,no_card)VALUES(?,?,?,?,?,?)", email, password, created, created, usertype, noCard)
+
+	if errQuery == nil {
+
+		sendResponse(w, 200, "Success")
+	} else {
+		fmt.Print(errQuery)
+		sendResponse(w, 400, "Insert Failed")
+	}
+}
+
+func UserLogout(w http.ResponseWriter, r *http.Request) {
 	resetUserToken(w)
 	resetProfileToken(w)
 	sendResponse(w, 200, "Logout Success")

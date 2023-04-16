@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -63,6 +64,31 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sendDataResponse(w, 200, "Success get profile", profiles)
+}
+
+func CreateProfile(w http.ResponseWriter, r *http.Request) {
+
+	db := connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		sendResponse(w, 400, "Failed")
+		return
+	}
+
+	id, _, _ := getUserTokenData(r)
+
+	nama := r.Form.Get("profile_name")
+	pin := r.Form.Get("pin")
+
+	_, errQuery := db.Exec("INSERT INTO profiles(id_user,nama,pin) VALUES (?,?,?)", id, nama, pin)
+	if errQuery == nil {
+		sendResponse(w, 200, "Success")
+	} else {
+		fmt.Print(errQuery)
+		sendResponse(w, 400, "Insert Failed")
+	}
 }
 
 // login profile

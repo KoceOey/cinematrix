@@ -57,7 +57,7 @@ func resetProfileToken(w http.ResponseWriter) {
 	})
 }
 
-func AuthenticateProfile(next http.HandlerFunc, accessType string) http.HandlerFunc {
+func AuthenticateProfile(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		isValidToken := validateProfileTokenFromCookies(r)
 		if !isValidToken {
@@ -67,19 +67,6 @@ func AuthenticateProfile(next http.HandlerFunc, accessType string) http.HandlerF
 		}
 	})
 }
-
-// func validateProfileToken(r *http.Request, accessType string) bool {
-// 	isAccessTokenValid, id, name := validateProfileTokenFromCookies(r)
-// 	fmt.Print(id, name, accessType, isAccessTokenValid)
-
-// 	if isAccessTokenValid {
-// 		isUserValid := userType == accessType
-// 		if isUserValid {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
 
 func validateProfileTokenFromCookies(r *http.Request) bool {
 	if cookie, err := r.Cookie(profileTokenName); err == nil {

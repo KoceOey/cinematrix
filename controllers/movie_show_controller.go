@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,8 +11,6 @@ import (
 func GetMovies(w http.ResponseWriter, r *http.Request) {
 	db := connect()
 	defer db.Close()
-
-	fmt.Println("1")
 
 	//rediss : "horror, america, anime"
 	//preference : [horror america anime]
@@ -30,7 +27,6 @@ func GetMovies(w http.ResponseWriter, r *http.Request) {
 	// for you
 	query := "SELECT ms.id, ms.judul, ms.released, ms.age_restriction, ms.sinopsis, ms.genre, ms.pemeran, ms.tags, ms.type, ms.liked FROM movies_and_show ms WHERE "
 	for i, value := range preference {
-		fmt.Println(value)
 		if i != 0 {
 			query += "or "
 		}

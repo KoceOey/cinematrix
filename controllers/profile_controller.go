@@ -144,7 +144,7 @@ func ProfileLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// temp send response
-	sendResponse(w, 200, "Success login profile")
+	GetMovies(w,r)
 }
 
 func ProfileLogout(w http.ResponseWriter, r *http.Request) {

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -71,9 +70,8 @@ func AuthenticateUser(next http.HandlerFunc, accessType string) http.HandlerFunc
 }
 
 func validateUserToken(r *http.Request, accessType string) bool {
-	isAccessTokenValid, id, name, userType :=
+	isAccessTokenValid, _, _, userType :=
 		validateUserTokenFromCookies(r)
-	fmt.Print(id, name, userType, accessType, isAccessTokenValid)
 
 	if isAccessTokenValid {
 		isUserValid := userType == accessType

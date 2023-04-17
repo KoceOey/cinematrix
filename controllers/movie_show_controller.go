@@ -9,6 +9,7 @@ import (
 )
 
 func GetMovies(w http.ResponseWriter, r *http.Request) {
+	StopWatching()
 	db := connect()
 	defer db.Close()
 
@@ -156,5 +157,4 @@ func GetMovies(w http.ResponseWriter, r *http.Request) {
 	listMoviesAndShow = append(listMoviesAndShow, mnsOutput)
 
 	sendDataResponse(w, 200, "Success get movies", listMoviesAndShow)
-
 }

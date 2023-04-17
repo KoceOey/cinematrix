@@ -19,6 +19,9 @@ var liked int
 var duration int
 
 func StopWatching() {
+	if !watching {
+		return
+	}
 	watching = false
 
 	db := connect()
@@ -144,6 +147,7 @@ func WatchTimer(txt string) {
 }
 
 func Watch(w http.ResponseWriter, r *http.Request) {
+	StopWatching()
 	playback = 1
 
 	db := connect()

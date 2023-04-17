@@ -37,6 +37,8 @@ func GetRedis() string {
 }
 
 func ShowProfile(w http.ResponseWriter, r *http.Request) {
+	StopWatching()
+	
 	db := connect()
 	defer db.Close()
 
@@ -67,6 +69,7 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateProfile(w http.ResponseWriter, r *http.Request) {
+	StopWatching()
 
 	db := connect()
 	defer db.Close()
@@ -93,6 +96,7 @@ func CreateProfile(w http.ResponseWriter, r *http.Request) {
 
 // login profile
 func ProfileLogin(w http.ResponseWriter, r *http.Request) {
+	StopWatching()
 	db := connect()
 	defer db.Close()
 
@@ -148,6 +152,7 @@ func ProfileLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProfileLogout(w http.ResponseWriter, r *http.Request) {
+	StopWatching()
 	resetProfileToken(w)
 	sendResponse(w, 200, "Logout Success")
 }

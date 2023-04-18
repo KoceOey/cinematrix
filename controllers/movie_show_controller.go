@@ -245,6 +245,61 @@ func GetMoviesByGenre(w http.ResponseWriter, r *http.Request) {
 	sendDataResponse(w, 200, "Success get movies", listMoviesAndShow)
 }
 
+func SearchMovie(w http.ResponseWriter, r *http.Request){
+	StopWatching()
+	db := connect()
+	defer db.Close()
+
+	input := r.URL.Query()["search"]
+	search := input[0]
+	
+	query := "SELECT ms.id, ms.judul, ms.released, ms.age_restriction, ms.sinopsis, ms.genre, ms.pemeran, ms.tags, ms.type, ms.liked FROM movies_and_show ms WHERE ms.genre LIKE '%" + search + "%' OR ms.judul LIKE '%" + search + "%' OR ms.pemeran LIKE '%" + search + "%'"
+
+	rows, err := db.Query(query)
+		
+	if err != nil {
+		log.Println(err)
+		sendResponse(w, 400, "Something went wrong, please try again.")
+		return
+	}
+
+	var findMovie MoviesAndShow
+	var findMovies []MoviesAndShow
+	for rows.Next() {
+		if err := rows.Scan(&findMovie.Id, &findMovie.Judul, &findMovie.Released, &findMovie.AgeRestriction, &findMovie.Sinopsis, &findMovie.Genre, &findMovie.Pemeran, &findMovie.Tags, &findMovie.MSType, &findMovie.Liked); err != nil {
+			log.Println(err)
+			return
+		} else {
+			query2 := "SELECT v.id, v.judul, v.description, v.duration, v.season, v.episode FROM video v WHERE v.id_ms = " + strconv.Itoa(findMovie.Id)
+			result, errQuery := db.Query(query2)
+	
+			if errQuery != nil {
+				log.Println(err)
+				sendResponse(w, 400, "Something went wrong, please try again.")
+				return
+			}
+	
+			var video Video
+			var videos []Video
+			for result.Next() {
+				if err := result.Scan(&video.Id, &video.JudulVideo, &video.Description, &video.Duration, &video.Season, &video.Episode); err != nil {
+					log.Println(err)
+					return
+				} else {
+					videos = append(videos, video)
+				}
+			}
+			findMovie.Videos = videos
+			findMovies = append(findMovies, findMovie)
+		}
+	}
+
+	var searchResult MoviesOutput
+	searchResult.Section = "Search"
+	searchResult.ListMovies = findMovies
+	sendDataResponse(w, 200, "Success search", searchResult)	
+}
+
 func AppendGenre(a []string, b []string) []string {
 
 	check := make(map[string]int)

@@ -11,7 +11,20 @@ require (
 )
 
 require (
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
+	golang.org/x/sync v0.1.0 // indirect
+	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
+	gorm.io/gorm v1.24.7-0.20230306060331-85eaf9eeda11 // indirect
+)
+
+require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-co-op/gocron v1.22.1
+	github.com/jasonlvhit/gocron v0.0.1
+	go.starlark.net v0.0.0-20230302034142-4b1e35fe2254
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
+	gorm.io/driver/mysql v1.5.0
 )

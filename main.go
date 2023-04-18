@@ -4,14 +4,22 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/cinematrix/controllers"
+	"github.com/go-co-op/gocron"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
 func main() {
+	// CRON
+	s := gocron.NewScheduler(time.UTC)
+	//Day().At("12:00")
+	s.Every(1).Day().Do(controllers.Task)
+	s.StartAsync()
+
 	router := mux.NewRouter()
 
 	router.HandleFunc("/login", controllers.UserLogin).Methods("POST")
@@ -24,7 +32,7 @@ func main() {
 	router.HandleFunc("/profile", controllers.AuthenticateUser(controllers.ShowProfile, "Member")).Methods("GET")
 	router.HandleFunc("/createProfile", controllers.AuthenticateUser(controllers.CreateProfile, "Member")).Methods("POST")
 
-	router.HandleFunc("/browse", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.GetMovies),"Member")).Methods("GET")
+	router.HandleFunc("/browse", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.GetMovies), "Member")).Methods("GET")
 	router.HandleFunc("/watch", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.Watch), "Member")).Methods("POST")
 	router.HandleFunc("/watch", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.Player), "Member")).Methods("PUT")
 

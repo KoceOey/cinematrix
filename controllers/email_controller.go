@@ -77,7 +77,7 @@ func SendSubscriptionEmail(w http.ResponseWriter, r *http.Request, db *sql.DB, u
 	}
 }
 
-func SendAlmostRanOutEmail(w http.ResponseWriter, r *http.Request, db *sql.DB, user User) {
+func SendAlmostRanOutEmail(user User) {
 	mail := gomail.NewMessage()
 
 	mail.SetHeader("From", "hehehiha21@outlook.com")
@@ -100,7 +100,7 @@ func SendAlmostRanOutEmail(w http.ResponseWriter, r *http.Request, db *sql.DB, u
 	}
 }
 
-func SendSubsRanOutEmail(w http.ResponseWriter, r *http.Request, db *sql.DB, user User) {
+func SendSubsRanOutEmail(user User) {
 	mail := gomail.NewMessage()
 
 	mail.SetHeader("From", "hehehiha21@outlook.com")

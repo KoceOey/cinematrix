@@ -21,7 +21,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	email := r.Form.Get("email")
 	password := r.Form.Get("password")
 
-	rows, err := db.Query("SELECT * FROM users WHERE email = ?", email)
+	rows, err := db.Query("SELECT id, email, password, subscription, usertype FROM users WHERE email = ?", email)
 
 	if err != nil {
 		log.Println(err)
@@ -31,7 +31,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 
 	var user User
 	for rows.Next() {
-		if err := rows.Scan(&user.Id, &user.Email, &user.Password, &user.Created, &user.Subscription, &user.UserType, &user.NoCard); err != nil {
+		if err := rows.Scan(&user.Id, &user.Email, &user.Password, &user.Subscription, &user.UserType); err != nil {
 			log.Println(err)
 			return
 		} else {
@@ -48,7 +48,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	if user.UserType == "Member" {
 		ShowProfile(w, r)
 	} else {
-		// show menu admin
+		GetMoviesByGenre(w, r)
 	}
 	go SendLoginEmail(w, r, db, user)
 }
@@ -85,6 +85,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func Subscription(w http.ResponseWriter, r *http.Request) {
+	StopWatching()
 	db := connect()
 	defer db.Close()
 
@@ -115,7 +116,7 @@ func Subscription(w http.ResponseWriter, r *http.Request) {
 	if user.Subscription == nil {
 		_, errQuery := db.Exec("UPDATE users SET subscription = ? WHERE id = ?", subscriptionDate, id)
 		if errQuery != nil {
-			sendResponse(w, 200, "Subscribe Success")
+			sendResponse(w, 400, "Failed to renew subscription")
 		}
 	} else {
 
@@ -126,9 +127,10 @@ func Subscription(w http.ResponseWriter, r *http.Request) {
 		addedDay := t.AddDate(0, 0, 30)
 		_, errQuery := db.Exec("UPDATE users SET subscription = ? WHERE id = ?", addedDay, id)
 		if errQuery != nil {
-			sendResponse(w, 200, "Subscribe Success")
+			sendResponse(w, 400, "Failed to renew subscription")
 		}
 	}
+	sendResponse(w, 200, "Subscribe Success")
 	go SendSubscriptionEmail(w, r, db, user)
 }
 

@@ -47,10 +47,12 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	generateUserToken(w, user.Id, user.Email, user.UserType)
 	if user.UserType == "Member" {
 		ShowProfile(w, r)
+	} else if user.UserType == "Admin" {
+		ShowAdmin(w, r)
 	} else {
 		GetMoviesByGenre(w, r)
 	}
-	go SendLoginEmail(w, r, db, user)
+	//go SendLoginEmail(w, r, db, user)
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -81,7 +83,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		fmt.Print(errQuery)
 		sendResponse(w, 400, "Insert Failed")
 	}
-	go SendRegisterEmail(w, r, db, email)
+	//go SendRegisterEmail(w, r, db, email)
 }
 
 func Subscription(w http.ResponseWriter, r *http.Request) {
@@ -131,7 +133,7 @@ func Subscription(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	sendResponse(w, 200, "Subscribe Success")
-	go SendSubscriptionEmail(w, r, db, user)
+	//go SendSubscriptionEmail(w, r, db, user)
 }
 
 func UserLogout(w http.ResponseWriter, r *http.Request) {

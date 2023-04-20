@@ -17,6 +17,11 @@ type Profile struct {
 	Preferences string `json:"preferences"`
 }
 
+type ResponseLoginAdmin struct {
+	Section    string      `json:"section"`
+	ListMovies interface{} `json:"content"`
+}
+
 type MoviesAndShow struct {
 	Id             int         `json:"id_movies_and_show"`
 	Judul          string      `json:"judul_movies_and_show"`

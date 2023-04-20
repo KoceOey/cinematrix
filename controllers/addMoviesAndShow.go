@@ -16,16 +16,16 @@ func AddMoviesAndShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	judul := r.Form.Get("judul")
-	genre, _ := strconv.Atoi(r.Form.Get("genre"))
 	released := r.Form.Get("released")
 	age_restriction := r.Form.Get("age_restriction")
 	sinopsis := r.Form.Get("sinopsis")
+	genre, _ := strconv.Atoi(r.Form.Get("genre"))
 	pemeran := r.Form.Get("pemeran")
 	tags := r.Form.Get("tags")
 	MSType := r.Form.Get("type")
 	Liked := r.Form.Get("liked")
 
-	_, errQuery := db.Exec("INSERT INTO users(judul,genre,released,age_restriction,sinopsis,pemeran,tags,type,liked)values (?,?,?,?,?,?,?,?)",
+	_, errQuery := db.Exec("INSERT INTO movies_and_show(judul,genre,released,age_restriction,sinopsis,pemeran,tags,type,liked)values (?,?,?,?,?,?,?,?,?)",
 		judul,
 		genre,
 		released,

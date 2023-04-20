@@ -198,9 +198,9 @@ func GetMoviesByGenre(w http.ResponseWriter, r *http.Request) {
 
 	for _, value := range listGenre {
 		query = "SELECT ms.id, ms.judul, ms.released, ms.age_restriction, ms.sinopsis, ms.genre, ms.pemeran, ms.tags, ms.type, ms.liked FROM movies_and_show ms WHERE ms.genre LIKE '%" + value + "%'"
-		
+
 		rows, err := db.Query(query)
-		
+
 		if err != nil {
 			log.Println(err)
 			sendResponse(w, 400, "Something went wrong, please try again.")
@@ -216,13 +216,13 @@ func GetMoviesByGenre(w http.ResponseWriter, r *http.Request) {
 			} else {
 				query2 := "SELECT v.id, v.judul, v.description, v.duration, v.season, v.episode FROM video v WHERE v.id_ms = " + strconv.Itoa(movieByGenre.Id)
 				result, errQuery := db.Query(query2)
-	
+
 				if errQuery != nil {
 					log.Println(err)
 					sendResponse(w, 400, "Something went wrong, please try again.")
 					return
 				}
-	
+
 				var video Video
 				var videos []Video
 				for result.Next() {
@@ -245,18 +245,18 @@ func GetMoviesByGenre(w http.ResponseWriter, r *http.Request) {
 	sendDataResponse(w, 200, "Success get movies", listMoviesAndShow)
 }
 
-func SearchMovie(w http.ResponseWriter, r *http.Request){
+func SearchMovie(w http.ResponseWriter, r *http.Request) {
 	StopWatching()
 	db := connect()
 	defer db.Close()
 
 	input := r.URL.Query()["search"]
 	search := input[0]
-	
+
 	query := "SELECT ms.id, ms.judul, ms.released, ms.age_restriction, ms.sinopsis, ms.genre, ms.pemeran, ms.tags, ms.type, ms.liked FROM movies_and_show ms WHERE ms.genre LIKE '%" + search + "%' OR ms.judul LIKE '%" + search + "%' OR ms.pemeran LIKE '%" + search + "%'"
 
 	rows, err := db.Query(query)
-		
+
 	if err != nil {
 		log.Println(err)
 		sendResponse(w, 400, "Something went wrong, please try again.")
@@ -272,13 +272,13 @@ func SearchMovie(w http.ResponseWriter, r *http.Request){
 		} else {
 			query2 := "SELECT v.id, v.judul, v.description, v.duration, v.season, v.episode FROM video v WHERE v.id_ms = " + strconv.Itoa(findMovie.Id)
 			result, errQuery := db.Query(query2)
-	
+
 			if errQuery != nil {
 				log.Println(err)
 				sendResponse(w, 400, "Something went wrong, please try again.")
 				return
 			}
-	
+
 			var video Video
 			var videos []Video
 			for result.Next() {
@@ -297,20 +297,20 @@ func SearchMovie(w http.ResponseWriter, r *http.Request){
 	var searchResult MoviesOutput
 	searchResult.Section = "Search"
 	searchResult.ListMovies = findMovies
-	sendDataResponse(w, 200, "Success search", searchResult)	
+	sendDataResponse(w, 200, "Success search", searchResult)
 }
 
 func AppendGenre(a []string, b []string) []string {
 
 	check := make(map[string]int)
 	d := append(a, b...)
-	res := make([]string,0)
+	res := make([]string, 0)
 	for _, val := range d {
 		check[val] = 1
 	}
 
 	for letter, _ := range check {
-		res = append(res,letter)
+		res = append(res, letter)
 	}
 
 	return res

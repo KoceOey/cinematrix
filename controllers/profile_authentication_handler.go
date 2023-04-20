@@ -9,7 +9,7 @@ import (
 )
 
 var jwtProfileKey = []byte("Bebasapasaja123!")
-var profileTokenName = "profileCookie"
+var profileTokenName = "userCookie"
 
 type ProfileClaims struct {
 	ID   int    `json:"id"`

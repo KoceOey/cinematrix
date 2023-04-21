@@ -38,6 +38,7 @@ type MoviesAndShow struct {
 
 type Video struct {
 	Id          int    `json:"id_video"`
+	Id_ms       int    `json:"id_ms"`
 	JudulVideo  string `json:"judul_video"`
 	Description string `json:"description"`
 	Duration    int    `json:"duration"`

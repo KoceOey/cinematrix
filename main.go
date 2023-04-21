@@ -26,11 +26,13 @@ func main() {
 	router.HandleFunc("/logout", controllers.UserLogout).Methods("POST")
 	router.HandleFunc("/register", controllers.Register).Methods("POST")
 	router.HandleFunc("/subscription", controllers.AuthenticateUser(controllers.Subscription, "Member")).Methods("POST")
+	router.HandleFunc("/editUser", controllers.AuthenticateUser(controllers.EditUser, "Member")).Methods("PUT")
 
 	router.HandleFunc("/loginProfile", controllers.AuthenticateUser(controllers.ProfileLogin, "Member")).Methods("POST")
 	router.HandleFunc("/logoutProfile", controllers.AuthenticateUser(controllers.ProfileLogout, "Member")).Methods("POST")
 	router.HandleFunc("/profile", controllers.AuthenticateUser(controllers.ShowProfile, "Member")).Methods("GET")
 	router.HandleFunc("/createProfile", controllers.AuthenticateUser(controllers.CreateProfile, "Member")).Methods("POST")
+	router.HandleFunc("/editProfile", controllers.AuthenticateUser(controllers.EditProfile, "Member")).Methods("PUT")
 
 	router.HandleFunc("/browse", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.GetMovies), "Member")).Methods("GET")
 	router.HandleFunc("/search", controllers.SearchMovie).Methods("GET")

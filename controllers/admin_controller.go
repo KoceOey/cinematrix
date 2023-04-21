@@ -2,8 +2,12 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func AddMoviesAndShow(w http.ResponseWriter, r *http.Request) {
@@ -76,6 +80,54 @@ func AddVideo(w http.ResponseWriter, r *http.Request) {
 		sendResponse(w, 200, "Movie added successfully!!!")
 	} else {
 		sendResponse(w, 400, "Movie added Failed!!!")
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(sendResponse)
+}
+
+func RemoveFilm(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		return
+	}
+
+	vars := mux.Vars(r)
+	id_ms := vars["id_ms"]
+	fmt.Println(id_ms)
+
+	query := "select id_ms FROM video WHERE id_ms = '" + id_ms + "'"
+
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Println(err)
+		sendResponse(w, 400, "Something went wrong, please try again")
+		return
+	}
+	var video Video
+	for rows.Next() {
+		fmt.Println(video.Id_ms)
+		if err := rows.Scan(&video.Id_ms); err != nil {
+			log.Println(err)
+			sendResponse(w, 400, "Something went wrong, please try again")
+			return
+		} else {
+			sendResponse(w, 400, "Data movies and show already on video!!!")
+			return
+		}
+	}
+
+	_, errQuery := db.Exec("DELETE FROM movies_and_show WHERE id=?",
+		id_ms,
+	)
+
+	if errQuery == nil {
+		sendResponse(w, 200, "Movie removed successfully!!!")
+	} else {
+		sendResponse(w, 400, "Movie remove Failed!!!")
 	}
 
 	w.Header().Set("Content-Type", "application/json")

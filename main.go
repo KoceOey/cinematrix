@@ -39,6 +39,7 @@ func main() {
 
 	router.HandleFunc("/addMovieShow", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.AddMoviesAndShow), "Admin")).Methods("POST")
 	router.HandleFunc("/addVideo", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.AddVideo), "Admin")).Methods("POST")
+	router.HandleFunc("/removeFilm/{id_ms}", controllers.RemoveFilm).Methods("DELETE")
 
 	http.Handle("/", router)
 	fmt.Println("Connected to port 8080")

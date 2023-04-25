@@ -168,3 +168,53 @@ func ProfileLogout(w http.ResponseWriter, r *http.Request) {
 	resetProfileToken(w)
 	sendResponse(w, 200, "Logout Success")
 }
+
+func EditProfile(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		sendResponse(w, 400, "Failed")
+	}
+
+	nama := r.Form.Get("nama")
+	fmt.Println(nama)
+	pin := r.Form.Get("pin")
+	fmt.Println(pin)
+
+	id, _, _ := getUserTokenData(r)
+	idProfile, namaProfile := getProfileTokenData(r)
+
+	if nama == "" {
+
+		_, errQuery := db.Exec("UPDATE profiles set pin=? WHERE id_user = ? AND id =?", pin, id, idProfile)
+
+		if err != nil {
+			log.Println(errQuery)
+			sendResponse(w, 400, "Something went wrong, please try again.")
+			return
+		}
+	} else if pin == "" {
+		_, errQuery := db.Exec("UPDATE profiles set nama=? WHERE id_user = ? AND id =?", nama, id, idProfile)
+
+		if err != nil {
+			log.Println(errQuery)
+			sendResponse(w, 400, "Something went wrong, please try again.")
+			return
+		}
+	} else if pin == "" && nama == "" {
+		sendDataResponse(w, 400, "No Data Input For edit profile ", namaProfile)
+
+	} else {
+		_, errQuery := db.Exec("UPDATE profiles set nama=?, pin=? WHERE id_user = ? AND id =?", nama, pin, id, idProfile)
+
+		if err != nil {
+			log.Println(errQuery)
+			sendResponse(w, 400, "Something went wrong, please try again.")
+			return
+		}
+	}
+
+	sendDataResponse(w, 200, "Success edit profile", namaProfile)
+}

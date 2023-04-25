@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/cinematrix/controllers"
-	"github.com/go-co-op/gocron"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -15,10 +13,10 @@ import (
 
 func main() {
 	// CRON
-	s := gocron.NewScheduler(time.UTC)
-	//Day().At("12:00")
-	s.Every(1).Day().Do(controllers.Task)
-	s.StartAsync()
+	// s := gocron.NewScheduler(time.UTC)
+	// //Day().At("12:00")
+	// s.Every(1).Day().Do(controllers.Task)
+	// s.StartAsync()
 
 	router := mux.NewRouter()
 

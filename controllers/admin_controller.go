@@ -19,11 +19,12 @@ func AddMoviesAndShow(w http.ResponseWriter, r *http.Request) {
 		sendResponse(w, 400, "failed")
 		return
 	}
+
 	judul := r.Form.Get("judul")
 	released := r.Form.Get("released")
 	age_restriction := r.Form.Get("age_restriction")
 	sinopsis := r.Form.Get("sinopsis")
-	genre, _ := strconv.Atoi(r.Form.Get("genre"))
+	genre := r.Form.Get("genre")
 	pemeran := r.Form.Get("pemeran")
 	tags := r.Form.Get("tags")
 	MSType := r.Form.Get("type")
@@ -49,6 +50,7 @@ func AddMoviesAndShow(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(sendResponse)
+
 }
 
 func AddVideo(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +62,7 @@ func AddVideo(w http.ResponseWriter, r *http.Request) {
 		sendResponse(w, 400, "failed")
 		return
 	}
+
 	id_ms := r.Form.Get("id_ms")
 	judul := r.Form.Get("judul")
 	description := r.Form.Get("description")
@@ -84,6 +87,7 @@ func AddVideo(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(sendResponse)
+
 }
 
 func RemoveFilm(w http.ResponseWriter, r *http.Request) {
@@ -107,6 +111,7 @@ func RemoveFilm(w http.ResponseWriter, r *http.Request) {
 		sendResponse(w, 400, "Something went wrong, please try again")
 		return
 	}
+
 	var video Video
 	for rows.Next() {
 		fmt.Println(video.Id_ms)
@@ -132,4 +137,5 @@ func RemoveFilm(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(sendResponse)
+
 }

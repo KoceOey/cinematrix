@@ -132,6 +132,61 @@ func Subscription(w http.ResponseWriter, r *http.Request) {
 	}
 	sendResponse(w, 200, "Subscribe Success")
 	go SendSubscriptionEmail(w, r, db, user)
+	// go SendSubscriptionEmail(w, r, db, user)
+}
+
+func EditUser(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		sendResponse(w, 400, "Failed")
+	}
+
+	email := r.Form.Get("email")
+	password := r.Form.Get("password")
+	no_card := r.Form.Get("no_card")
+
+	id, _, _ := getUserTokenData(r)
+
+	if email != "" {
+		query := "UPDATE users SET email = ? WHERE users.id = ?"
+		_, errQuery := db.Exec(query, email, id)
+
+		if errQuery != nil {
+			log.Println(query)
+			sendResponse(w, 400, "Something went wrong, please try again.")
+			return
+		}
+		sendDataResponse(w, 200, "Success edit email", email)
+	}
+
+	if password != "" {
+		query := "UPDATE users SET password = ? WHERE users.id = ?"
+
+		_, errQuery := db.Exec(query, password, id)
+
+		if errQuery != nil {
+			log.Println(query)
+			sendResponse(w, 400, "Something went wrong, please try again.")
+			return
+		}
+		sendDataResponse(w, 200, "Success edit password", password)
+	}
+
+	if no_card != "" {
+		query := "UPDATE users SET no_card = ? WHERE users.id = ?"
+		_, errQuery := db.Exec(query, no_card, id)
+
+		if errQuery != nil {
+			log.Println(query)
+			sendResponse(w, 400, "Something went wrong, please try again.")
+			return
+		}
+		sendDataResponse(w, 200, "Success edit card number", no_card)
+	}
+
 }
 
 func UserLogout(w http.ResponseWriter, r *http.Request) {

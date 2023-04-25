@@ -1,10 +1,11 @@
 package controllers
+
 import (
 	"encoding/json"
 	"net/http"
 )
 
-func sendResponse(w http.ResponseWriter,status int, message string) {
+func sendResponse(w http.ResponseWriter, status int, message string) {
 	var response ErrorResponse
 	response.Status = status
 	response.Message = message

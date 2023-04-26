@@ -19,7 +19,7 @@ func getAllUsers() []User {
 }
 func CheckSub(user []User) {
 	fmt.Println(user[0].Id)
-	fmt.Println(user[1].Id)
+	// fmt.Println(user[1].Id)
 	for _, u := range user {
 		dateDiff := calculateTimeDiff(*u.Subscription)
 		if dateDiff <= 3 && dateDiff > 0 {

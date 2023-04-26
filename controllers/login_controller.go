@@ -72,7 +72,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	noCard := r.Form.Get("no_card")
 	usertype := "Member"
 
-	_, errQuery := db.Exec("INSERT INTO users(email,password,created,usertype,no_card)VALUES(?,?,?,?,?,?)", email, password, created, usertype, noCard)
+	_, errQuery := db.Exec("INSERT INTO users(email,password,created,usertype,no_card)VALUES(?,?,?,?,?)", email, password, created, usertype, noCard)
 
 	if errQuery == nil {
 

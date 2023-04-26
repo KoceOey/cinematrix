@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
 	redis "github.com/redis/go-redis/v9"
 )
 
@@ -119,6 +120,32 @@ func CreateProfile(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Print(errQuery)
 		sendResponse(w, 400, "Insert Failed")
+	}
+}
+
+func DeleteProfile(w http.ResponseWriter, r *http.Request) {
+	id, _, _ := getUserTokenData(r)
+
+	//Check banyak profile pengguna saat ini
+	banyakProfile := checkAccountProfileAmount(id)
+
+	if banyakProfile == 0 { // Jika akun belum memiliki profile maka tidak dapat menghapus
+		sendResponse(w, 400, "Belum ada profile di akun ini")
+		return
+	}
+
+	db := gormConn()
+	var profile Profile
+	vars := mux.Vars(r)
+
+	id_profile := vars["id_profile"]
+	result := db.Where("id=?", id_profile).Delete(&profile)
+
+	if result.RowsAffected < 1 {
+		sendResponse(w, 400, "Gagal Delete Profile")
+	} else {
+		fmt.Println(profile.Nama)
+		sendResponse(w, 200, "Berhasil delete profile")
 	}
 }
 

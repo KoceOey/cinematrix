@@ -80,7 +80,25 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 	sendDataResponse(w, 200, "Success get profile", profiles)
 }
 
+func checkAccountProfileAmount(id int) int {
+	db := gormConn()
+	var profile []Profile
+
+	db.Where("id_user=?", id).Find(&profile)
+	return len(profile)
+}
+
 func CreateProfile(w http.ResponseWriter, r *http.Request) {
+	id, _, _ := getUserTokenData(r)
+
+	//Check banyak profile pengguna saat ini
+	banyakProfile := checkAccountProfileAmount(id)
+
+	if banyakProfile == 5 { // Jika akun sudah memiliki 5 profile maka tidak boleh create profile lagi
+		sendResponse(w, 400, "Sudah mencapai limit profile! (5)")
+		return
+	}
+
 	StopWatching()
 
 	db := connect()
@@ -91,8 +109,6 @@ func CreateProfile(w http.ResponseWriter, r *http.Request) {
 		sendResponse(w, 400, "Failed")
 		return
 	}
-
-	id, _, _ := getUserTokenData(r)
 
 	nama := r.Form.Get("profile_name")
 	pin := r.Form.Get("pin")

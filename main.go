@@ -31,6 +31,7 @@ func main() {
 	router.HandleFunc("/profile", controllers.AuthenticateUser(controllers.ShowProfile, "Member")).Methods("GET")
 	router.HandleFunc("/createProfile", controllers.AuthenticateUser(controllers.CreateProfile, "Member")).Methods("POST")
 	router.HandleFunc("/editProfile", controllers.AuthenticateUser(controllers.EditProfile, "Member")).Methods("PUT")
+	router.HandleFunc("/deleteProfile/{id_profile}", controllers.AuthenticateUser(controllers.DeleteProfile, "Member")).Methods("DELETE")
 
 	router.HandleFunc("/browse", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.GetMovies), "Member")).Methods("GET")
 	router.HandleFunc("/search", controllers.SearchMovie).Methods("GET")

@@ -139,3 +139,31 @@ func RemoveFilm(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(sendResponse)
 
 }
+
+func RemoveVideo(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		return
+	}
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+	fmt.Println(id)
+
+	_, errQuery := db.Exec("DELETE FROM video WHERE id=?",
+		id,
+	)
+
+	if errQuery == nil {
+		sendResponse(w, 200, "Video removed successfully!!!")
+	} else {
+		sendResponse(w, 400, "Video remove Failed!!!")
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(sendResponse)
+
+}

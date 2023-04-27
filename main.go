@@ -41,6 +41,9 @@ func main() {
 	router.HandleFunc("/addVideo", controllers.AuthenticateUser(controllers.AuthenticateProfile(controllers.AddVideo), "Admin")).Methods("POST")
 	router.HandleFunc("/removeFilm/{id_ms}", controllers.RemoveFilm).Methods("DELETE")
 
+	// endpoint remove video (admin)
+	router.HandleFunc("/removeVideo/{id}", controllers.AuthenticateUser(controllers.RemoveVideo, "Admin")).Methods("DELETE")
+
 	http.Handle("/", router)
 	fmt.Println("Connected to port 8080")
 	log.Println("Connected to port 8080")

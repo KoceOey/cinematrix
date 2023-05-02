@@ -134,8 +134,7 @@ func Subscription(w http.ResponseWriter, r *http.Request) {
 	}
 	sendResponse(w, 200, "Subscribe Success")
 
-	//go SendSubscriptionEmail(w, r, db, user)
-	// go SendSubscriptionEmail(w, r, db, user)
+	go SendSubscriptionEmail(w, r, db, user)
 }
 
 func EditUser(w http.ResponseWriter, r *http.Request) {

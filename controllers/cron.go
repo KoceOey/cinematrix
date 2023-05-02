@@ -23,10 +23,10 @@ func CheckSub(user []User) {
 	for _, u := range user {
 		dateDiff := calculateTimeDiff(*u.Subscription)
 		if dateDiff <= 3 && dateDiff > 0 {
-			// SendAlmostRanOutEmail(u)
+			SendAlmostRanOutEmail(u)
 		} else if dateDiff <= 0 {
 			db := gormConn()
-			// SendSubsRanOutEmail(u)
+			SendSubsRanOutEmail(u)
 			db.Model(&u).Update("subscription", nil)
 		}
 	}
